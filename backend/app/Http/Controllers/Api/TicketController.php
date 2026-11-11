@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Jobs\SendAdminTicketSmsJob;
 use App\Http\Controllers\Controller;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
@@ -65,6 +66,8 @@ class TicketController extends Controller
 
             return $newTicket;
         });
+        
+        SendAdminTicketSmsJob::dispatch($ticket);
 
         return response()->json([
             'message' => 'درخواست شما با موفقیت ثبت شد.',
