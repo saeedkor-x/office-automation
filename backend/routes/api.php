@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AnnouncementController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ServiceController;
+use App\Http\Controllers\Api\TicketController;
 use Illuminate\Support\Facades\Route;
 
 // ۱. مسیرهای عمومی (بدون نیاز به لاگین)
@@ -18,6 +19,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
+    // مسیرهای تیکت برای مشتری و ادمین
+    Route::get('/tickets', [TicketController::class, 'index']);
+    Route::post('/tickets', [TicketController::class, 'store']);
+    Route::get('/tickets/{ticket}', [TicketController::class, 'show']);
+
     // ۳. مسیرهای مخصوص مدیر (نیازمند لاگین + نقش ادمین)
     Route::middleware('admin')->group(function () {
         Route::post('/services', [ServiceController::class, 'store']);
@@ -27,5 +33,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/announcements', [AnnouncementController::class, 'store']);
         Route::put('/announcements/{announcement}', [AnnouncementController::class, 'update']);
         Route::delete('/announcements/{announcement}', [AnnouncementController::class, 'destroy']);
+
+        // رسیدگی به تیکت و آپلود فایل نهایی توسط ادمین
+        Route::post('/tickets/{ticket}/manage', [TicketController::class, 'manage']);
     });
 });
